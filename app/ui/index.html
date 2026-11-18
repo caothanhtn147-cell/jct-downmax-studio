@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JCT DownMax Studio</title>
+  <style>
+    :root {
+      --bg-primary: #050507;
+      --bg-card: #0e0f14;
+      --bg-elevated: #151720;
+      --accent-primary: #06b6d4;
+      --accent-success: #10b981;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --text-primary: #ededed;
+      --text-secondary: #888892;
+      --border-hairline: rgba(255, 255, 255, 0.08);
+      --radius: 8px;
+      --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.6);
+      --font-sans: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      --font-mono: 'JetBrains Mono', 'Cascadia Code', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: radial-gradient(circle at top right, rgba(6, 182, 212, 0.08), transparent 40%), var(--bg-primary);
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+      padding: 24px;
+    }
+
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-card);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 6px;
+      background: rgba(6, 182, 212, 0.14);
+      border: 1px solid rgba(6, 182, 212, 0.35);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-primary);
+    }
+
+    .brand h1 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    .brand span {
+      display: block;
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    .telemetry {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      padding: 5px 10px;
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-secondary);
+      transition: border-color 0.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .pill.ok { color: var(--accent-success); border-color: rgba(16, 185, 129, 0.28); }
+    .pill.warn { color: var(--accent-warning); border-color: rgba(245, 158, 11, 0.28); }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hairline);
+      border-radius: var(--radius);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .card-title {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--text-secondary);
+      margin-bottom: 14px;
+      font-weight: 600;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr 160px auto auto;
+      gap: 10px;
+    }
+
+    .options-row {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: 1fr 220px auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chk-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      border-radius: 6px;
+      padding: 9px 12px;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    input[type="url"], input[type="text"], select {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      color: var(--text-primary);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-size: 14px;
+      outline: none;
+      transition: border-color 0.2s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    input[type="url"]:focus, input[type="text"]:focus, select:focus {
+      border-color: var(--accent-primary);
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.18);
+    }
+
+    button {
+      border: 1px solid var(--border-hairline);
+      border-radius: 6px;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.2s cubic-bezier(0.22, 1, 0.36, 1), background-color 0.2s cubic-bezier(0.22, 1, 0.36, 1), transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), filter 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    button:active { transform: translateY(1px) scale(0.99); }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { transition: none !important; }
+    }
+
+    .btn-secondary {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+    .btn-secondary:hover { border-color: var(--accent-primary); }
+
+    .btn-primary {
+      background: var(--accent-primary);
+      color: #050507;
+      border-color: transparent;
+    }
+    .btn-primary:hover { filter: brightness(1.1); }
+
+    .probe-box {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-hairline);
+      font-size: 12px;
+      display: none;
+    }
+
+    .probe-box.error { border-color: rgba(239, 68, 68, 0.4); color: #fca5a5; }
+    .probe-box.ready { border-color: rgba(6, 182, 212, 0.35); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border-hairline);
+    }
+
+    th {
+      color: var(--text-secondary);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-family: var(--font-mono);
+    }
+
+    .mono { font-family: var(--font-mono); font-size: 13px; }
+    .status-badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      text-transform: uppercase;
+    }
+    .st-completed { background: rgba(16, 185, 129, 0.16); color: var(--accent-success); }
+    .st-downloading { background: rgba(6, 182, 212, 0.16); color: var(--accent-primary); }
+    .st-queued { background: rgba(245, 158, 11, 0.16); color: var(--accent-warning); }
+    .st-failed { background: rgba(239, 68, 68, 0.16); color: var(--accent-danger); }
+
+    @media (max-width: 768px) {
+      .input-row, .options-row { grid-template-columns: 1fr; }
+      .header { flex-direction: column; align-items: flex-start; gap: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="brand-mark" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+        </div>
+        <div>
+          <h1>JCT DownMax Studio</h1>
+          <span>JCT - Tien Ich Giai Phap So | Local Sovereign Engine</span>
+        </div>
+      </div>
+      <div class="telemetry" id="telemetry-bar">
+        <span class="pill" id="pill-ytdlp">yt-dlp: checking</span>
+        <span class="pill" id="pill-ffmpeg">ffmpeg: checking</span>
+        <span class="pill" id="pill-disk">C: checking</span>
+      </div>
+    </header>
+
+    <section class="card">
+      <div class="card-title">Nap Lien Ket Da Nen Tang (12 Nen Tang Trong Tam | 1,755 Extractors)</div>
+      <div class="input-row">
+        <input type="url" id="url-input" placeholder="Dan duong dan video HTTPS tai day..." />
+        <select id="quality-select">
+          <option value="best">Best 4K MP4</option>
+          <option value="1080p">Full HD 1080p</option>
+          <option value="audio">Audio MP3</option>
+        </select>
+        <button class="btn-secondary" id="btn-probe" type="button">Phan Tich</button>
+        <button class="btn-primary" id="btn-download" type="button">Tai Ngay</button>
+      </div>
+      <div class="options-row">
+        <input type="text" id="proxy-input" placeholder="Proxy tuy chon (vd: http://127.0.0.1:7890 hoac socks5://...)" />
+        <select id="cookies-select" aria-label="Cookies trinh duyet">
+          <option value="">Cookies: Khong dung</option>
+          <option value="chrome">Cookies: Chrome</option>
+          <option value="edge">Cookies: Edge</option>
+          <option value="firefox">Cookies: Firefox</option>
+          <option value="brave">Cookies: Brave</option>
+        </select>
+        <label class="chk-wrap">
+          <input type="checkbox" id="subtitles-check" />
+          <span>Tai Phu De (VI / EN)</span>
+        </label>
+      </div>
+      <div class="probe-box" id="probe-box"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-title">Hang Doi &amp; Lich Su Xu Ly (SQLite WAL)</div>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nen Tang</th>
+            <th>Tieu De / URL</th>
+            <th>Chat Luong</th>
+            <th>Trang Thai</th>
+            <th>Thu Lai</th>
+          </tr>
+        </thead>
+        <tbody id="jobs-tbody">
+          <tr><td colspan="6" style="color: var(--text-secondary);">Chua co tac vu nao trong hang doi.</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </div>
+
+  <script>
+    let lastProbedUrl = "";
+    let lastProbedTitle = "";
+    const ALLOWED_STATUS = new Set(["completed", "downloading", "queued", "failed", "probing", "cancelled"]);
+
+    async function refreshHealth() {
+      try {
+        const res = await fetch("/api/health");
+        const data = await res.json();
+        const yt = document.getElementById("pill-ytdlp");
+        const ff = document.getElementById("pill-ffmpeg");
+        const dk = document.getElementById("pill-disk");
+
+        yt.textContent = "yt-dlp: " + (data.yt_dlp ? "READY" : "MISSING");
+        yt.className = "pill " + (data.yt_dlp ? "ok" : "warn");
+
+        ff.textContent = "ffmpeg: " + (data.ffmpeg ? "READY" : "FALLBACK");
+        ff.className = "pill " + (data.ffmpeg ? "ok" : "warn");
+
+        dk.textContent = "Drive C: " + Number(data.c_free_gb || 0).toFixed(2) + " GB";
+        dk.className = "pill " + (Number(data.c_free_gb) > 44 ? "ok" : "warn");
+      } catch (e) {}
+    }
+
+    async function refreshJobs() {
+      try {
+        const res = await fetch("/api/jobs");
+        const data = await res.json();
+        const tbody = document.getElementById("jobs-tbody");
+        if (!data.jobs || data.jobs.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="6" style="color: var(--text-secondary);">Chua co tac vu nao trong hang doi.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = data.jobs.map(j => {
+          const safeStatus = ALLOWED_STATUS.has(String(j.status)) ? String(j.status) : "queued";
+          const stClass = "st-" + safeStatus;
+          const label = j.title ? j.title : j.url;
+          const sizeNote = (safeStatus === "completed" && Number(j.file_size_mb) > 0)
+            ? `<div class="mono" style="color:var(--accent-success);font-size:12px;margin-top:4px;">File: ${escapeHtml(j.file_size_mb)} MB</div>`
+            : "";
+          const errNote = j.error_msg ? `<div style="color:#fca5a5;font-size:12px;margin-top:4px;">${escapeHtml(j.error_msg)}</div>` : "";
+          return `
+            <tr>
+              <td class="mono">#${escapeHtml(Number(j.id) || 0)}</td>
+              <td class="mono">${escapeHtml(j.platform)}</td>
+              <td>${escapeHtml(label)}${sizeNote}${errNote}</td>
+              <td class="mono">${escapeHtml(j.quality)}</td>
+              <td><span class="status-badge ${stClass}">${escapeHtml(safeStatus)}</span></td>
+              <td class="mono">${escapeHtml(Number(j.attempts) || 0)}</td>
+            </tr>
+          `;
+        }).join("");
+      } catch (e) {}
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "").replace(/[&<>"']/g, m => ({
+        "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;"
+      }[m]));
+    }
+
+    document.getElementById("url-input").addEventListener("input", () => {
+      lastProbedUrl = "";
+      lastProbedTitle = "";
+    });
+
+    document.getElementById("btn-probe").addEventListener("click", async () => {
+      const url = document.getElementById("url-input").value.trim();
+      const proxy = document.getElementById("proxy-input").value.trim();
+      const cookies_browser = document.getElementById("cookies-select").value;
+      const box = document.getElementById("probe-box");
+      if (!url) return;
+      box.style.display = "block";
+      box.className = "probe-box";
+      box.textContent = "Dang phan tich lien ket...";
+      try {
+        const res = await fetch("/api/probe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url, proxy, cookies_browser })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          lastProbedUrl = "";
+          lastProbedTitle = "";
+          box.className = "probe-box error";
+          box.textContent = "Loi: " + (data.error || "Khong the phan tich URL");
+          return;
+        }
+        lastProbedUrl = url;
+        lastProbedTitle = String(data.meta.title || "");
+        const dur = Number(data.meta.duration) || 0;
+        box.className = "probe-box ready";
+        box.textContent = `${lastProbedTitle} | Nen tang: ${String(data.meta.platform || "generic")} | Thoi luong: ${dur}s`;
+      } catch (e) {
+        box.className = "probe-box error";
+        box.textContent = "Loi ket noi server noi bo.";
+      }
+    });
+
+    document.getElementById("btn-download").addEventListener("click", async () => {
+      const url = document.getElementById("url-input").value.trim();
+      const quality = document.getElementById("quality-select").value;
+      const proxy = document.getElementById("proxy-input").value.trim();
+      const cookies_browser = document.getElementById("cookies-select").value;
+      const subtitles = document.getElementById("subtitles-check").checked;
+      const box = document.getElementById("probe-box");
+      if (!url) return;
+      const titleToSend = (url === lastProbedUrl) ? lastProbedTitle : "";
+      try {
+        const res = await fetch("/api/enqueue", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url, quality, title: titleToSend, proxy, cookies_browser, subtitles })
+        });
+        const data = await res.json();
+        if (!res.ok || !data.ok) {
+          box.style.display = "block";
+          box.className = "probe-box error";
+          box.textContent = "Tu choi: " + (data.error || "URL khong hop le");
+          return;
+        }
+        document.getElementById("url-input").value = "";
+        lastProbedUrl = "";
+        lastProbedTitle = "";
+        box.style.display = "none";
+        refreshJobs();
+      } catch (e) {}
+    });
+
+    refreshHealth();
+    refreshJobs();
+    setInterval(refreshJobs, 2500);
+    setInterval(refreshHealth, 10000);
+  </script>
+</body>
+</html>

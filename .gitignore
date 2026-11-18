@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.db
+*.db-wal
+*.db-shm
+*.sqlite*
+downloads/
+data/
+logs/
+*.log
+run_codex_*.py
+codex_*.md
+.pytest_cache/
